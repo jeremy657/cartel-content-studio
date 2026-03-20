@@ -500,21 +500,48 @@ function buildGeminiParts(textPrompt){
 }
 
 async function callAI(textPrompt){
+  const models=['gemini-1.5-flash','gemini-1.5-pro'];
   const parts=buildGeminiParts(textPrompt);
-  const res=await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
-    {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        contents:[{parts:parts}],
-        generationConfig:{temperature:.85,maxOutputTokens:3500}
-      })
+  let lastErr='알 수 없는 오류';
+  for(const model of models){
+    try{
+      const res=await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
+        {
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({
+            contents:[{parts:parts}],
+            generationConfig:{temperature:.85,maxOutputTokens:3500}
+          })
+        }
+      );
+      if(res.status===401||res.status===403){
+        throw new Error('API 키 오류입니다. aistudio.google.com에서 키를 확인해주세요.');
+      }
+      if(res.status===429){
+        lastErr='요청 한도를 초과했습니다. 잠시 후 다시 시도해주세요.';
+        continue;
+      }
+      if(!res.ok){
+        const e=await res.json();
+        lastErr=e.error?.message||`서버 오류 ${res.status}`;
+        continue;
+      }
+      const d=await res.json();
+      const text=d.candidates?.[0]?.content?.parts?.[0]?.text||'';
+      if(text) return text;
+      lastErr='빈 응답을 받았습니다.';
+    }catch(e){
+      if(e.message.includes('API 키')) throw e;
+      if(e.message.includes('Failed to fetch')){
+        lastErr='API 연결 실패. API 키를 다시 확인하거나 잠시 후 재시도해주세요.\n(우측 상단 Gemini 연결됨 클릭 → 키 재입력)';
+        continue;
+      }
+      lastErr=e.message;
     }
-  );
-  if(!res.ok){const e=await res.json();throw new Error(e.error?.message||`오류 ${res.status}`)}
-  const d=await res.json();
-  return d.candidates?.[0]?.content?.parts?.[0]?.text||'';
+  }
+  throw new Error(lastErr);
 }
 
 async function generate(){
