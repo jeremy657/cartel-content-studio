@@ -139,81 +139,29 @@ textarea{resize:vertical;min-height:72px;line-height:1.65;}
         <div class="ihs">AI가 텍스트를 생성하고 디자인까지 완성된 PNG 파일로 만들어드립니다</div>
       </div>
       <div class="ib">
-        <div>
-          <label>콘텐츠 주제</label>
-          <input type="text" id="tin" placeholder="예: 내신대비 특강 안내 / CCR 독해법 소개 / 수강생 변화 스토리">
-        </div>
+        <div><label>콘텐츠 주제</label><input type="text" id="tin" placeholder="예: 내신대비 특강 안내 / CCR 독해법 소개 / 수강생 변화 스토리"></div>
         <div class="row3">
-          <div>
-            <label>타겟 독자</label>
-            <select id="tsel">
-              <option value="초등 학부모">초등 학부모</option>
-              <option value="중등 학부모" selected>중등 학부모</option>
-              <option value="고등 학부모">고등 학부모</option>
-              <option value="전체 학부모">전체 학부모</option>
-            </select>
-          </div>
-          <div id="sfield">
-            <label>슬라이드 수</label>
-            <select id="scnt">
-              <option value="5">5장</option>
-              <option value="6" selected>6장</option>
-              <option value="7">7장</option>
-              <option value="8">8장</option>
-            </select>
-          </div>
-          <div>
-            <label>톤 &amp; 스타일</label>
-            <select id="tonesel">
-              <option value="공감형">공감형 (따뜻하게)</option>
-              <option value="정보형" selected>정보형 (신뢰감)</option>
-              <option value="긴박형">긴박형 (마감 강조)</option>
-              <option value="스토리형">스토리형 (감성)</option>
-            </select>
-          </div>
+          <div><label>타겟 독자</label><select id="tsel"><option value="초등 학부모">초등 학부모</option><option value="중등 학부모" selected>중등 학부모</option><option value="고등 학부모">고등 학부모</option><option value="전체 학부모">전체 학부모</option></select></div>
+          <div id="sfield"><label>슬라이드 수</label><select id="scnt"><option value="5">5장</option><option value="6" selected>6장</option><option value="7">7장</option><option value="8">8장</option></select></div>
+          <div><label>톤 &amp; 스타일</label><select id="tonesel"><option value="공감형">공감형 (따뜻하게)</option><option value="정보형" selected>정보형 (신뢰감)</option><option value="긴박형">긴박형 (마감 강조)</option><option value="스토리형">스토리형 (감성)</option></select></div>
         </div>
-        <div>
-          <label>추가 요청 <span>— 날짜·강조 포인트 등 (선택)</span></label>
-          <textarea id="ein" placeholder="예: 다산중 4월 23일 / 새봄중 4월 27일 일정 포함&#10;예: 서울대 교수 검증 강조해줘"></textarea>
-        </div>
-        <button class="gbtn" id="gbtn" onclick="generate()">
-          <div class="spin" id="spin"></div>
-          <span id="gtxt">&#10022; 카드뉴스 생성 &amp; PNG 다운로드</span>
-        </button>
+        <div><label>추가 요청 <span>— 날짜·강조 포인트 등 (선택)</span></label><textarea id="ein" placeholder="예: 다산중 4월 23일 / 새봄중 4월 27일&#10;예: 서울대 교수 검증 강조해줘"></textarea></div>
+        <button class="gbtn" id="gbtn" onclick="generate()"><div class="spin" id="spin"></div><span id="gtxt">&#10022; 카드뉴스 생성 &amp; PNG 다운로드</span></button>
       </div>
     </div>
     <div class="oc" id="oc">
-      <div class="oh">
-        <span class="ot" id="ot">생성된 카드뉴스</span>
-        <div class="oacts">
-          <button class="obtn" onclick="generate()">&#8635; 다시 생성</button>
-          <button class="obtn dl" onclick="downloadAll()">&#8595; 전체 PNG 저장</button>
-        </div>
-      </div>
+      <div class="oh"><span class="ot" id="ot">생성된 카드뉴스</span><div class="oacts"><button class="obtn" onclick="generate()">&#8635; 다시 생성</button><button class="obtn dl" onclick="downloadAll()">&#8595; 전체 PNG 저장</button></div></div>
       <div class="ob"><div class="card-grid" id="cardGrid"></div></div>
     </div>
     <div class="plain-out" id="plainOut">
-      <div class="oh">
-        <span class="ot">생성된 콘텐츠</span>
-        <div class="oacts">
-          <button class="obtn" onclick="generate()">&#8635; 다시 생성</button>
-          <button class="obtn" id="copyBtn" onclick="copyPlain()">전체 복사</button>
-        </div>
-      </div>
+      <div class="oh"><span class="ot">생성된 콘텐츠</span><div class="oacts"><button class="obtn" onclick="generate()">&#8635; 다시 생성</button><button class="obtn" id="copyBtn" onclick="copyPlain()">전체 복사</button></div></div>
       <div class="plain-body" id="plainBody"></div>
     </div>
     <div class="rc" id="rc">
-      <div class="rch">
-        <span>&#9999;&#65039;</span>
-        <span class="rct">수정 요청</span>
-        <span class="rcs">AI에게 바로 수정 요청하세요</span>
-      </div>
+      <div class="rch"><span>&#9999;&#65039;</span><span class="rct">수정 요청</span><span class="rcs">AI에게 바로 수정 요청하세요</span></div>
       <div class="rqbs" id="rqbs"></div>
       <div class="clog" id="clog"></div>
-      <div class="rinrow">
-        <textarea class="rtarea" id="rta" placeholder="수정 요청 입력 (Enter=전송, Shift+Enter=줄바꿈)" onkeydown="handleKey(event)"></textarea>
-        <button class="rsend" id="rsend" onclick="refine()">수정</button>
-      </div>
+      <div class="rinrow"><textarea class="rtarea" id="rta" placeholder="수정 요청 입력 (Enter=전송, Shift+Enter=줄바꿈)" onkeydown="handleKey(event)"></textarea><button class="rsend" id="rsend" onclick="refine()">수정</button></div>
     </div>
   </div>
 </div>
@@ -225,38 +173,60 @@ var WHITE = '#FFFFFF';
 var LOGO_SRC = document.getElementById('_logo').src;
 
 var TOPICS = ['학원 소개','내신대비 특강','CCR 프레임워크란','CSI 독해 3단계','문해력의 중요성','수강생 변화 스토리','소수정예 5명','무료 체험 수업 모집','수능 국어·영어 동시 대비','서술형 답안 작성 훈련','비문학 독해 전략','강사진 소개'];
-var RBTS = ['더 짧게 줄여줘','더 자세하게 써줘','톤을 더 따뜻하게','더 전문적으로','헤드라인 더 임팩트있게','CTA 더 강하게','공감 요소 더 많이','검증 내용 강조'];
+var RBTS = ['더 짧게','더 자세하게','더 따뜻한 톤','더 전문적으로','헤드라인 강화','CTA 강화','공감 요소 추가','검증 내용 강조'];
 
-function stripMd(text) {
-  if (!text) return '';
-  return text
+// 마크다운 완전 제거 (방어용)
+function clean(s) {
+  if (!s) return '';
+  return s
     .replace(/#{1,6}\s*/g, '')
-    .replace(/\*{1,3}([^*]+)\*{1,3}/g, '$1')
-    .replace(/_{1,3}([^_]+)_{1,3}/g, '$1')
-    .replace(/`{1,3}[^`]*`{1,3}/g, '')
-    .replace(/^\s*[-*+]\s+/gm, '')
-    .replace(/^\s*\d+\.\s+/gm, '')
+    .replace(/\*{1,3}([^*\n]+)\*{1,3}/g, '$1')
+    .replace(/_{1,2}([^_\n]+)_{1,2}/g, '$1')
+    .replace(/`[^`]+`/g, '')
+    .replace(/^\s*[-*+>]\s*/gm, '')
+    .replace(/^\s*\d+\.\s*/gm, '')
     .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
-    .replace(/^\s*>\s*/gm, '')
     .trim();
 }
 
-var BRAND = '당신은 카르텔 국어학원과 Studysync의 전용 콘텐츠 생성 AI입니다.'
-  + ' 카르텔 국어학원: 남양주 다산신도시 프리미엄 국어학원.'
-  + ' CCR(Connect Core Reading): 자체 개발 문해력 프레임워크.'
-  + ' CSI: Comprehension-Summarize-Infer.'
-  + ' 주소: 남양주시 다산중앙로146번길 12-1 3층.'
-  + ' 인스타: @dasan_cartel_academy.'
-  + ' 수강료: 초등 25만원 중등 27만원 고등 29만원.'
-  + ' 주 1회 3시간(수업2H+솔루션1H). 최대 5명 소수정예.'
-  + ' 주 4회 관리형 숙제. 비문학 중심 수능 국어영어 동시 대비.'
-  + ' 문해력 없는 학생도 시작 가능. 서울대 교수박사진 연구 검증.'
-  + ' 강사 전원 서울 10위권 대학 입학. 내신 평균 90점+.'
-  + ' 해시태그: #다산국어학원 #남양주국어학원 #문해력 #소수정예 #카르텔국어학원 #CCR #CSI #비문학독해 #내신국어 #다산학원추천';
+var BRAND = '카르텔 국어학원 다산관 (Cartel Academy) & Studysync 전용 AI. '
+  + '위치: 남양주 다산신도시. 주소: 남양주시 다산중앙로146번길 12-1 3층. '
+  + '인스타: @dasan_cartel_academy. '
+  + '수강료: 초등25만/중등27만/고등29만. '
+  + '수업: 주1회 3시간(수업2H+솔루션1H), 최대5명 소수정예, 주4회 관리형 숙제. '
+  + '비문학 중심, 수능국어영어 동시대비. 서울대 교수박사진 연구 검증. '
+  + '강사 전원 서울 10위권 대학 입학. 내신 평균 90점+. '
+  + '핵심: 문해력 없어도 시작 가능, 배경지식 주입 아닌 글의 원리 훈련. '
+  + '해시태그: #다산국어학원 #남양주국어학원 #문해력 #소수정예 #카르텔국어학원 #CCR #CSI #비문학독해 #내신국어';
 
-var CARD_RULES = '중요 규칙: 마크다운 문법 절대 금지. ##, **, *, -, 1. 기호 사용 불가. 순수 텍스트만 사용.'
-  + ' 슬라이드 구분은 반드시 새 줄에 --- 만 사용.'
-  + ' 형식: [슬라이드 1 / 커버] 헤드라인 --- [슬라이드 2] 태그라벨 헤드라인 본문 --- ... --- [슬라이드 N / CTA] 행동유도문구 학원정보';
+// AI에게 JSON으로 받아서 마크다운 원천 차단
+function buildPrompt(topic, target, tone, count, extra) {
+  return BRAND
+    + '\n\n아래 조건으로 인스타그램 카드뉴스 슬라이드 ' + count + '개를 만들어주세요.'
+    + '\n주제: ' + topic
+    + '\n타겟: ' + target
+    + '\n톤: ' + tone
+    + (extra ? '\n추가요청: ' + extra : '')
+    + '\n\n반드시 아래 JSON 형식으로만 응답하세요. JSON 외 다른 텍스트는 절대 출력하지 마세요.'
+    + '\n마크다운 기호(#, *, **, -, 1. 등)는 어떤 경우에도 절대 사용하지 마세요.'
+    + '\n모든 텍스트는 순수 한국어 문장만 사용하세요.'
+    + '\n\n{"slides":['
+    + '\n  {"type":"cover","headline":"임팩트있는 헤드라인 1~2줄"},'
+    + '\n  {"type":"normal","tag":"태그라벨(10자이내)","headline":"헤드라인 1~2줄","body":"본문 2~3줄 설명"},'
+    + '\n  ... (슬라이드 수만큼 반복)'
+    + '\n  {"type":"cta","headline":"행동유도 문구","body":"남양주시 다산중앙로146번길 12-1 3층\\n최대 5명 소수정예\\n@dasan_cartel_academy"}'
+    + '\n]}'
+    + '\n\nslides 배열의 첫번째는 반드시 cover, 마지막은 반드시 cta, 중간은 모두 normal 타입으로 작성하세요.';
+}
+
+function buildRefinePrompt(req, prevText) {
+  return BRAND
+    + '\n\n기존 카드뉴스 JSON:\n' + prevText
+    + '\n\n수정 요청: ' + req
+    + '\n\n위 JSON을 수정 요청에 맞게 수정해서 동일한 JSON 형식으로만 응답하세요.'
+    + '\n마크다운 기호(#, *, **, -) 절대 사용 금지. 순수 텍스트만 사용.'
+    + '\nJSON 외 다른 텍스트 출력 금지.';
+}
 
 var mode = 'card';
 var apiKey = localStorage.getItem('cg_key') || '';
@@ -264,26 +234,21 @@ var lastText = '';
 var lastSlides = [];
 var lastCanvases = [];
 
-(function buildUI() {
+// UI 빌드
+(function() {
   var qt = document.getElementById('qtags');
-  TOPICS.forEach(function(topic) {
-    var sp = document.createElement('span');
-    sp.className = 'qt';
-    sp.textContent = topic;
-    sp.addEventListener('click', (function(t) {
-      return function() { document.getElementById('tin').value = t; document.getElementById('tin').focus(); };
-    })(topic));
-    qt.appendChild(sp);
+  TOPICS.forEach(function(t) {
+    var s = document.createElement('span');
+    s.className = 'qt'; s.textContent = t;
+    s.addEventListener('click', (function(v) { return function() { document.getElementById('tin').value = v; document.getElementById('tin').focus(); }; })(t));
+    qt.appendChild(s);
   });
   var rb = document.getElementById('rqbs');
   RBTS.forEach(function(r) {
-    var btn = document.createElement('button');
-    btn.className = 'rqb';
-    btn.textContent = r;
-    btn.addEventListener('click', (function(req) {
-      return function() { document.getElementById('rta').value = req; doRefine(); };
-    })(r));
-    rb.appendChild(btn);
+    var b = document.createElement('button');
+    b.className = 'rqb'; b.textContent = r;
+    b.addEventListener('click', (function(v) { return function() { document.getElementById('rta').value = v; doRefine(); }; })(r));
+    rb.appendChild(b);
   });
 })();
 
@@ -304,63 +269,202 @@ window.setMode = function(m, btn) {
   mode = m;
   document.querySelectorAll('.mb').forEach(function(b) { b.classList.remove('on'); });
   btn.classList.add('on');
-  var titles = {card:'인스타 카드뉴스 — PNG 파일 자동 제작', blog:'블로그 포스팅 생성', cafe:'맘카페 홍보글 생성', kakao:'카카오톡 공지문 생성'};
-  document.getElementById('htitle').textContent = titles[m];
+  var t = {card:'인스타 카드뉴스 — PNG 파일 자동 제작', blog:'블로그 포스팅 생성', cafe:'맘카페 홍보글 생성', kakao:'카카오톡 공지문 생성'};
+  document.getElementById('htitle').textContent = t[m];
   document.getElementById('sfield').style.display = m === 'card' ? 'block' : 'none';
-  document.getElementById('gtxt').textContent = m === 'card' ? '✦ 카드뉴스 생성 & PNG 다운로드' : '✦ 콘텐츠 생성하기';
+  document.getElementById('gtxt').textContent = m === 'card' ? '\u2726 카드뉴스 생성 & PNG 다운로드' : '\u2726 콘텐츠 생성하기';
 };
 
 function callAI(prompt) {
   return fetch(
     'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=' + apiKey,
-    {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({
-        contents: [{parts: [{text: prompt}]}],
-        generationConfig: {temperature: 0.85, maxOutputTokens: 3500}
-      })
-    }
+    {method:'POST', headers:{'Content-Type':'application/json'},
+     body: JSON.stringify({contents:[{parts:[{text:prompt}]}], generationConfig:{temperature:0.7, maxOutputTokens:4000}})}
   ).then(function(r) {
-    if (r.status === 401 || r.status === 403) throw new Error('API 키 오류. 우측 상단에서 확인해주세요.');
-    if (r.status === 429) throw new Error('요청 한도 초과. 잠시 후 다시 시도해주세요.');
+    if (r.status===401||r.status===403) throw new Error('API 키 오류. 우측 상단에서 확인해주세요.');
+    if (r.status===429) throw new Error('요청 한도 초과. 잠시 후 다시 시도해주세요.');
     if (!r.ok) throw new Error('서버 오류 ' + r.status);
     return r.json();
   }).then(function(d) {
-    var t = d.candidates && d.candidates[0] && d.candidates[0].content
-      && d.candidates[0].content.parts && d.candidates[0].content.parts[0]
-      ? d.candidates[0].content.parts[0].text : '';
+    var t = d.candidates&&d.candidates[0]&&d.candidates[0].content&&d.candidates[0].content.parts&&d.candidates[0].content.parts[0] ? d.candidates[0].content.parts[0].text : '';
     if (!t) throw new Error('응답이 비어있습니다.');
     return t;
   });
 }
 
-function parseSlides(text) {
-  var NL = '\n';
-  var SEP = '---';
-  var parts = [];
-  var cur = '';
-  var lines = text.split(NL);
-  for (var i = 0; i < lines.length; i++) {
-    var tr = lines[i].trim();
-    if (tr.length >= 3 && tr.replace(/-/g, '').length === 0) {
-      if (cur.trim()) parts.push(cur.trim());
-      cur = '';
-    } else {
-      cur += lines[i] + NL;
+// JSON 파싱 - 마크다운 응답이 와도 JSON만 추출
+function parseJSON(text) {
+  var match = text.match(/\{[\s\S]*\}/);
+  if (!match) throw new Error('JSON 형식 응답을 받지 못했습니다. 다시 시도해주세요.');
+  var data = JSON.parse(match[0]);
+  if (!data.slides || !Array.isArray(data.slides)) throw new Error('슬라이드 데이터가 없습니다.');
+  return data.slides.map(function(s) {
+    return {
+      type: s.type || 'normal',
+      tag: clean(s.tag || ''),
+      headline: clean(s.headline || ''),
+      body: clean(s.body || ''),
+      title: s.title || ''
+    };
+  });
+}
+
+// Canvas 카드 그리기 - 레이아웃 전면 재설계
+function drawCard(slide, idx, total, logo) {
+  var SZ = 1080;
+  var PAD = 72;
+  var cv = document.createElement('canvas');
+  cv.width = SZ; cv.height = SZ;
+  var ctx = cv.getContext('2d');
+
+  var dark = idx % 2 === 0;
+  var bg   = dark ? NAVY : WHITE;
+  var fg   = dark ? WHITE : NAVY;
+  var muted = dark ? 'rgba(255,255,255,0.5)' : 'rgba(24,50,100,0.55)';
+  var tagBg  = dark ? 'rgba(255,255,255,0.15)' : NAVY;
+  var tagFg  = WHITE;
+  var boxBg  = dark ? 'rgba(255,255,255,0.08)' : 'rgba(24,50,100,0.05)';
+  var boxBd  = dark ? 'rgba(255,255,255,0.15)' : 'rgba(24,50,100,0.15)';
+  var lineFg = dark ? 'rgba(255,255,255,0.15)' : 'rgba(24,50,100,0.12)';
+  var hdrFg  = dark ? 'rgba(255,255,255,0.35)' : 'rgba(24,50,100,0.35)';
+  var accentLine = dark ? 'rgba(255,255,255,0.5)' : NAVY;
+
+  // 배경
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, SZ, SZ);
+
+  // 배경 장식 원 (우하단)
+  ctx.save();
+  ctx.globalAlpha = dark ? 0.06 : 0.04;
+  ctx.beginPath(); ctx.arc(SZ, SZ, 320, 0, Math.PI*2);
+  ctx.strokeStyle = fg; ctx.lineWidth = 1; ctx.stroke();
+  ctx.beginPath(); ctx.arc(SZ, SZ, 200, 0, Math.PI*2);
+  ctx.stroke();
+  ctx.restore();
+
+  // ── 헤더 영역 (로고 + 학원명 + 페이지번호) ──
+  var HDR_Y = 56;
+  var HDR_H = 52;
+
+  // 로고
+  if (logo && logo.complete && logo.naturalWidth > 0) {
+    var oc = document.createElement('canvas');
+    oc.width = logo.naturalWidth; oc.height = logo.naturalHeight;
+    var ox = oc.getContext('2d');
+    ox.drawImage(logo, 0, 0);
+    ox.globalCompositeOperation = 'source-in';
+    ox.fillStyle = fg;
+    ox.fillRect(0, 0, oc.width, oc.height);
+    ctx.drawImage(oc, PAD, HDR_Y + (HDR_H-40)/2, 40, 40);
+  }
+
+  // 학원명
+  ctx.fillStyle = hdrFg;
+  ctx.font = '500 20px Noto Sans KR,sans-serif';
+  ctx.textBaseline = 'middle'; ctx.textAlign = 'left';
+  ctx.fillText('\uCE74\uB974\uD154 \uAD6D\uC5B4\uD559\uC6D0 \uB2E4\uC0B0\uAD00', PAD + 52, HDR_Y + HDR_H/2);
+
+  // 페이지 번호
+  ctx.fillStyle = hdrFg;
+  ctx.font = '400 19px Noto Sans KR,sans-serif';
+  ctx.textAlign = 'right';
+  ctx.fillText((idx+1) + ' / ' + total, SZ - PAD, HDR_Y + HDR_H/2);
+  ctx.textAlign = 'left';
+
+  // 헤더 하단 구분선
+  ctx.fillStyle = lineFg;
+  ctx.fillRect(PAD, HDR_Y + HDR_H + 6, SZ - PAD*2, 1);
+
+  // ── 콘텐츠 영역 ──
+  var CONTENT_TOP = HDR_Y + HDR_H + 30;
+  var CONTENT_BOT = SZ - 90; // 하단 계정명 공간 확보
+  var CONTENT_H   = CONTENT_BOT - CONTENT_TOP;
+
+  ctx.textBaseline = 'top';
+
+  if (slide.type === 'cover') {
+    // 커버: 중앙 정렬, 큰 헤드라인
+    var cMid = CONTENT_TOP + CONTENT_H / 2;
+
+    // 액센트 라인
+    ctx.fillStyle = accentLine;
+    ctx.fillRect(PAD, cMid - 80, 44, 4);
+
+    // 헤드라인
+    ctx.fillStyle = fg;
+    ctx.font = '900 88px Noto Sans KR,sans-serif';
+    var hlY = cMid - 60;
+    hlY = wrapText(ctx, slide.headline, PAD, hlY, SZ - PAD*2, 108);
+
+  } else if (slide.type === 'cta') {
+    // CTA: 헤드라인 상단, 정보 박스 하단
+    ctx.fillStyle = accentLine;
+    ctx.fillRect(PAD, CONTENT_TOP + 10, 44, 4);
+
+    ctx.fillStyle = fg;
+    ctx.font = '900 76px Noto Sans KR,sans-serif';
+    var ctaY = CONTENT_TOP + 30;
+    ctaY = wrapText(ctx, slide.headline, PAD, ctaY, SZ - PAD*2, 96);
+
+    // 정보 박스 - 하단 고정
+    var BOX_H = 260;
+    var BOX_Y = CONTENT_BOT - BOX_H;
+    ctx.fillStyle = boxBg;
+    rRect(ctx, PAD, BOX_Y, SZ - PAD*2, BOX_H, 16); ctx.fill();
+    ctx.strokeStyle = boxBd; ctx.lineWidth = 1;
+    rRect(ctx, PAD, BOX_Y, SZ - PAD*2, BOX_H, 16); ctx.stroke();
+
+    ctx.fillStyle = dark ? 'rgba(255,255,255,0.75)' : 'rgba(24,50,100,0.75)';
+    ctx.font = '400 27px Noto Sans KR,sans-serif';
+    wrapText(ctx, slide.body, PAD + 28, BOX_Y + 32, SZ - PAD*2 - 56, 54);
+
+  } else {
+    // 일반 슬라이드: 태그 → 헤드라인 → 본문 균형 배치
+    var curY = CONTENT_TOP + 20;
+
+    // 태그 배지
+    if (slide.tag) {
+      ctx.font = '700 22px Noto Sans KR,sans-serif';
+      var tw = ctx.measureText(slide.tag).width;
+      ctx.fillStyle = tagBg;
+      rRect(ctx, PAD, curY, tw + 34, 42, 8); ctx.fill();
+      ctx.fillStyle = tagFg;
+      ctx.textBaseline = 'middle';
+      ctx.fillText(slide.tag, PAD + 17, curY + 21);
+      ctx.textBaseline = 'top';
+      curY += 62;
+    }
+
+    // 액센트 라인
+    ctx.fillStyle = accentLine;
+    ctx.fillRect(PAD, curY, 44, 3);
+    curY += 20;
+
+    // 헤드라인
+    ctx.fillStyle = fg;
+    ctx.font = '900 76px Noto Sans KR,sans-serif';
+    curY = wrapText(ctx, slide.headline, PAD, curY, SZ - PAD*2, 96);
+    curY += 28;
+
+    // 본문 - 헤드라인과 적절한 간격
+    if (slide.body) {
+      ctx.fillStyle = muted;
+      ctx.font = '400 32px Noto Sans KR,sans-serif';
+      // 본문이 하단을 넘지 않도록 제한
+      var maxBodyY = CONTENT_BOT - 60;
+      if (curY < maxBodyY) {
+        wrapText(ctx, slide.body, PAD, curY, SZ - PAD*2, 50, maxBodyY);
+      }
     }
   }
-  if (cur.trim()) parts.push(cur.trim());
 
-  return parts.filter(function(p) { return p.length > 0; }).map(function(part, i, arr) {
-    var ls = part.split(NL).filter(function(l) { return l.trim(); });
-    var m = ls[0] ? ls[0].match(/\[([^\]]+)\]/) : null;
-    var title = m ? m[1].trim() : ('슬라이드 ' + (i + 1));
-    var rest = ls.slice(m ? 1 : 0).map(function(l) { return stripMd(l); });
-    if (i === 0) return {title: title, type: 'cover', headline: rest.join(NL), body: ''};
-    if (i === arr.length - 1) return {title: title, type: 'cta', headline: rest[0] || '', body: rest.slice(1).join(NL)};
-    return {title: title, type: 'normal', tag: rest[0] || '', headline: rest[1] || '', body: rest.slice(2).join(NL)};
-  });
+  // ── 하단 계정명 ──
+  ctx.fillStyle = hdrFg;
+  ctx.font = '400 20px Noto Sans KR,sans-serif';
+  ctx.textBaseline = 'bottom';
+  ctx.fillText('@dasan_cartel_academy', PAD, SZ - 34);
+
+  return cv;
 }
 
 function rRect(ctx, x, y, w, h, r) {
@@ -372,12 +476,12 @@ function rRect(ctx, x, y, w, h, r) {
   ctx.closePath();
 }
 
-function wrapText(ctx, text, x, y, maxW, lh) {
-  var NL = '\n';
-  var chars = (text || '').split('');
+function wrapText(ctx, text, x, y, maxW, lh, maxY) {
+  var chars = (text||'').split('');
   var line = ''; var curY = y;
   for (var i = 0; i < chars.length; i++) {
-    if (chars[i] === NL) {
+    if (maxY && curY + lh > maxY) break;
+    if (chars[i] === '\n') {
       ctx.fillText(line, x, curY); curY += lh; line = '';
     } else {
       var test = line + chars[i];
@@ -386,99 +490,15 @@ function wrapText(ctx, text, x, y, maxW, lh) {
       } else { line = test; }
     }
   }
-  if (line) { ctx.fillText(line, x, curY); curY += lh; }
+  if (line && (!maxY || curY + lh <= maxY + lh)) {
+    ctx.fillText(line, x, curY); curY += lh;
+  }
   return curY;
-}
-
-function drawCard(slide, idx, total, logo) {
-  var SZ = 1080;
-  var cv = document.createElement('canvas');
-  cv.width = SZ; cv.height = SZ;
-  var ctx = cv.getContext('2d');
-  var dark = idx % 2 === 0;
-  ctx.fillStyle = dark ? NAVY : '#FFFFFF';
-  ctx.fillRect(0, 0, SZ, SZ);
-  ctx.beginPath(); ctx.arc(SZ+40, SZ+40, 200, 0, Math.PI*2);
-  ctx.strokeStyle = dark ? 'rgba(255,255,255,0.05)' : 'rgba(24,50,100,0.04)';
-  ctx.lineWidth = 1; ctx.stroke();
-  if (logo && logo.complete && logo.naturalWidth > 0) {
-    var oc = document.createElement('canvas');
-    oc.width = logo.naturalWidth; oc.height = logo.naturalHeight;
-    var ox = oc.getContext('2d');
-    ox.drawImage(logo, 0, 0);
-    ox.globalCompositeOperation = 'source-in';
-    ox.fillStyle = dark ? 'rgba(255,255,255,0.85)' : NAVY;
-    ox.fillRect(0, 0, oc.width, oc.height);
-    ctx.drawImage(oc, 60, 56, 46, 46);
-  }
-  ctx.fillStyle = dark ? 'rgba(255,255,255,0.45)' : 'rgba(24,50,100,0.45)';
-  ctx.font = '500 22px Noto Sans KR,sans-serif';
-  ctx.textBaseline = 'middle'; ctx.textAlign = 'left';
-  ctx.fillText('\uCE74\uB974\uD154 \uAD6D\uC5B4\uD559\uC6D0 \uB2E4\uC0B0\uAD00', 118, 79);
-  ctx.fillStyle = dark ? 'rgba(255,255,255,0.2)' : 'rgba(24,50,100,0.2)';
-  ctx.font = '400 20px Noto Sans KR,sans-serif';
-  ctx.textAlign = 'right';
-  ctx.fillText((idx+1) + ' / ' + total, SZ-60, 79);
-  ctx.textAlign = 'left';
-  ctx.fillStyle = dark ? 'rgba(255,255,255,0.1)' : 'rgba(24,50,100,0.08)';
-  ctx.fillRect(60, 118, SZ-120, 1);
-  var fg = dark ? '#FFFFFF' : NAVY;
-  var sub = dark ? 'rgba(255,255,255,0.6)' : '#475569';
-  ctx.textBaseline = 'top';
-
-  if (slide.type === 'cover') {
-    ctx.fillStyle = dark ? 'rgba(255,255,255,0.2)' : NAVY;
-    ctx.fillRect(60, 400, 52, 4);
-    ctx.fillStyle = fg;
-    ctx.font = '900 86px Noto Sans KR,sans-serif';
-    wrapText(ctx, slide.headline, 60, 424, SZ-120, 112);
-  } else if (slide.type === 'cta') {
-    ctx.fillStyle = dark ? 'rgba(255,255,255,0.2)' : NAVY;
-    ctx.fillRect(60, 160, 52, 4);
-    ctx.fillStyle = fg;
-    ctx.font = '900 72px Noto Sans KR,sans-serif';
-    wrapText(ctx, slide.headline, 60, 184, SZ-120, 94);
-    ctx.fillStyle = dark ? 'rgba(255,255,255,0.07)' : 'rgba(24,50,100,0.05)';
-    rRect(ctx, 60, 600, SZ-120, 320, 16); ctx.fill();
-    ctx.strokeStyle = dark ? 'rgba(255,255,255,0.12)' : 'rgba(24,50,100,0.12)';
-    ctx.lineWidth = 1; rRect(ctx, 60, 600, SZ-120, 320, 16); ctx.stroke();
-    ctx.fillStyle = dark ? 'rgba(255,255,255,0.75)' : 'rgba(24,50,100,0.75)';
-    ctx.font = '500 26px Noto Sans KR,sans-serif';
-    wrapText(ctx, slide.body, 88, 630, SZ-176, 54);
-  } else {
-    if (slide.tag) {
-      ctx.font = '700 23px Noto Sans KR,sans-serif';
-      var tw = ctx.measureText(slide.tag).width;
-      ctx.fillStyle = dark ? 'rgba(255,255,255,0.12)' : NAVY;
-      rRect(ctx, 60, 160, tw+34, 42, 6); ctx.fill();
-      ctx.fillStyle = dark ? 'rgba(255,255,255,0.88)' : WHITE;
-      ctx.textBaseline = 'middle';
-      ctx.fillText(slide.tag, 77, 181);
-      ctx.textBaseline = 'top';
-    }
-    var ly = slide.tag ? 222 : 160;
-    ctx.fillStyle = dark ? 'rgba(255,255,255,0.2)' : NAVY;
-    ctx.fillRect(60, ly, 52, 3);
-    ctx.fillStyle = fg;
-    ctx.font = '900 72px Noto Sans KR,sans-serif';
-    var ny = wrapText(ctx, slide.headline, 60, ly+22, SZ-120, 94);
-    if (slide.body) {
-      ctx.fillStyle = sub;
-      ctx.font = '400 30px Noto Sans KR,sans-serif';
-      wrapText(ctx, slide.body, 60, Math.min(ny+24, 640), SZ-120, 48);
-    }
-  }
-  ctx.fillStyle = dark ? 'rgba(255,255,255,0.2)' : 'rgba(24,50,100,0.18)';
-  ctx.font = '400 20px Noto Sans KR,sans-serif';
-  ctx.textBaseline = 'bottom';
-  ctx.fillText('@dasan_cartel_academy', 60, SZ-36);
-  return cv;
 }
 
 function doRender(slides, logo) {
   var grid = document.getElementById('cardGrid');
-  grid.innerHTML = '';
-  lastCanvases = [];
+  grid.innerHTML = ''; lastCanvases = [];
   slides.forEach(function(slide, i) {
     var cv = drawCard(slide, i, slides.length, logo);
     lastCanvases.push(cv);
@@ -486,14 +506,15 @@ function doRender(slides, logo) {
     var prev = document.createElement('canvas'); prev.className = 'card-canvas';
     prev.width = cv.width; prev.height = cv.height;
     prev.getContext('2d').drawImage(cv, 0, 0);
-    var lbl = document.createElement('div'); lbl.className = 'card-label'; lbl.textContent = slide.title;
-    var btn = document.createElement('button'); btn.className = 'card-dl-btn'; btn.textContent = '\u2B07 PNG \uC800\uC7A5';
+    var lbl = document.createElement('div'); lbl.className = 'card-label';
+    lbl.textContent = '\uC2AC\uB77C\uC774\uB4DC ' + (i+1);
+    var btn = document.createElement('button'); btn.className = 'card-dl-btn';
+    btn.textContent = '\u2B07 PNG \uC800\uC7A5';
     (function(c, n) {
       btn.addEventListener('click', function() {
         var a = document.createElement('a');
         a.download = '\uCE74\uB974\uD154_\uCE74\uB4DC\uB274\uC2A4_' + n + '.png';
-        a.href = c.toDataURL('image/png');
-        a.click();
+        a.href = c.toDataURL('image/png'); a.click();
       });
     })(cv, i+1);
     wrap.appendChild(prev); wrap.appendChild(lbl); wrap.appendChild(btn);
@@ -516,8 +537,7 @@ window.downloadAll = function() {
     setTimeout(function() {
       var a = document.createElement('a');
       a.download = '\uCE74\uB974\uD154_\uCE74\uB4DC\uB274\uC2A4_' + (i+1) + '.png';
-      a.href = c.toDataURL('image/png');
-      a.click();
+      a.href = c.toDataURL('image/png'); a.click();
     }, i * 400);
   });
   toast(lastCanvases.length + '\uC7A5 \uB2E4\uC6B4\uB85C\uB4DC \uC2DC\uC791!');
@@ -528,7 +548,7 @@ window.generate = function() {
   var tp = document.getElementById('tin').value.trim();
   if (!tp) { toast('\uCF58\uD150\uCE20 \uC8FC\uC81C\uB97C \uC785\uB825\uD574\uC8FC\uC138\uC694'); document.getElementById('tin').focus(); return; }
   var tg = document.getElementById('tsel').value;
-  var sl = document.getElementById('scnt').value;
+  var sl = parseInt(document.getElementById('scnt').value);
   var tn = document.getElementById('tonesel').value;
   var ex = document.getElementById('ein').value.trim();
   setLd(true);
@@ -538,12 +558,15 @@ window.generate = function() {
     document.getElementById('oc').className = 'oc show';
     document.getElementById('plainOut').className = 'plain-out';
     document.getElementById('cardGrid').innerHTML = '<div class="prog">AI\uAC00 \uCF58\uD150\uCE20\uB97C \uC0DD\uC131\uD558\uACE0 \uC788\uC2B5\uB2C8\uB2E4...</div>';
-    var prompt = BRAND + ' ' + CARD_RULES
-      + ' \uC8FC\uC81C:' + tp + ' \uD0C0\uAC9F:' + tg + ' \uD1A4:' + tn + ' \uC2AC\uB77C\uC774\uB4DC\uC218:' + sl + '\uC7A5'
-      + (ex ? ' \uCD94\uAC00\uC694\uCCAD:' + ex : '');
-    callAI(prompt).then(function(text) {
+
+    callAI(buildPrompt(tp, tg, tn, sl, ex)).then(function(text) {
       lastText = text;
-      lastSlides = parseSlides(text);
+      try {
+        lastSlides = parseJSON(text);
+      } catch(pe) {
+        // JSON 파싱 실패시 재시도
+        throw new Error('\uC751\uB2F5 \uD30C\uC2F1 \uC2E4\uD328. \uB2E4\uC2DC \uC2DC\uB3C4\uD574\uC8FC\uC138\uC694. (' + pe.message + ')');
+      }
       document.getElementById('cardGrid').innerHTML = '<div class="prog">PNG \uCE74\uB4DC\uB97C \uADF8\uB9AC\uACE0 \uC788\uC2B5\uB2C8\uB2E4... (' + lastSlides.length + '\uC7A5)</div>';
       loadAndRender(lastSlides);
       addChat('ai', '\uCE74\uB4DC\uB274\uC2A4 ' + lastSlides.length + '\uC7A5\uC774 \uC0DD\uC131\uB418\uC5C8\uC2B5\uB2C8\uB2E4! \uC544\uB798 \uBC84\uD2BC\uC73C\uB85C \uC800\uC7A5\uD558\uC138\uC694.');
@@ -553,19 +576,21 @@ window.generate = function() {
       document.getElementById('cardGrid').innerHTML = '<div class="prog" style="color:#ef4444;">' + e.message + '</div>';
       toast(e.message); setLd(false);
     });
+
   } else {
     document.getElementById('oc').className = 'oc';
     document.getElementById('plainOut').className = 'plain-out show';
     document.getElementById('plainBody').textContent = '\uC0DD\uC131 \uC911...';
     var mp = {
-      blog: '\uB124\uC774\uBC84 \uBE14\uB85C\uADF8 \uD3EC\uC2A4\uD305 \uC791\uC131. \uC81C\uBAA9\uC5D0 \uB2E4\uC0B0 \uAD6D\uC5B4\uD559\uC6D0 \uB610\uB294 \uB0A8\uC591\uC8FC \uD3EC\uD568. 1500\uC790 \uC774\uC0C1. \uAC80\uC0C9\uD0DC\uADF8 10\uAC1C.',
-      cafe: '\uB9D8\uCE74\uD398 \uAC8C\uC2DC\uAE00 \uC791\uC131. \uC2E4\uC81C \uD559\uBD80\uBAA8 \uD6C4\uAE30\uCC98\uB7FC. \uACF5\uAC10\uC5D0\uC11C \uD559\uC6D0\uC18C\uAC1C\uB85C \uC5F0\uACB0. \uC81C\uBAA9 \uD3EC\uD568.',
-      kakao: '\uCE74\uCE74\uC624\uD1A1 \uACF5\uC9C0\uBB38 \uC791\uC131. \uBA85\uD655\uD558\uACE0 \uAC04\uACB0\uD558\uAC8C. \uC774\uBAA8\uC9C0\uB85C \uAD6C\uC870\uD654.'
+      blog: '\uB124\uC774\uBC84 \uBE14\uB85C\uADF8 \uD3EC\uC2A4\uD305. \uC81C\uBAA9\uC5D0 \uB2E4\uC0B0 \uAD6D\uC5B4\uD559\uC6D0 \uB610\uB294 \uB0A8\uC591\uC8FC \uD3EC\uD568. 1500\uC790 \uC774\uC0C1. \uAC80\uC0C9\uD0DC\uADF8 10\uAC1C.',
+      cafe: '\uB9D8\uCE74\uD398 \uAC8C\uC2DC\uAE00. \uC2E4\uC81C \uD559\uBD80\uBAA8 \uD6C4\uAE30\uCC98\uB7FC \uC790\uC5F0\uC2A4\uB7FD\uAC8C. \uACF5\uAC10\uC5D0\uC11C \uD559\uC6D0\uC18C\uAC1C\uB85C \uC5F0\uACB0. \uC81C\uBAA9 \uD3EC\uD568.',
+      kakao: '\uCE74\uCE74\uC624\uD1A1 \uACF5\uC9C0\uBB38. \uBA85\uD655\uD558\uACE0 \uAC04\uACB0\uD558\uAC8C. \uC774\uBAA8\uC9C0\uB85C \uAD6C\uC870\uD654.'
     };
-    callAI(BRAND + ' \uC8FC\uC81C:' + tp + ' \uD0C0\uAC9F:' + tg + ' \uD1A4:' + tn + (ex ? ' \uCD94\uAC00:' + ex : '') + ' ' + (mp[mode] || '')).then(function(text) {
+    var p2 = BRAND + ' \uC8FC\uC81C:' + tp + ' \uD0C0\uAC9F:' + tg + ' \uD1A4:' + tn + (ex?' \uCD94\uAC00:'+ex:'') + ' ' + (mp[mode]||'');
+    callAI(p2).then(function(text) {
       lastText = text;
       document.getElementById('plainBody').textContent = text;
-      addChat('ai', '\uCF58\uD150\uCE20\uAC00 \uC0DD\uC131\uB418\uC5C8\uC2B5\uB2C8\uB2E4! \uC218\uC815\uC774 \uD544\uC694\uD558\uBA74 \uC544\uB798\uC5D0 \uC694\uCCAD\uD558\uC138\uC694.');
+      addChat('ai', '\uCF58\uD150\uCE20\uAC00 \uC0DD\uC131\uB418\uC5C8\uC2B5\uB2C8\uB2E4!');
       document.getElementById('rc').classList.add('show');
       setLd(false);
     }).catch(function(e) {
@@ -577,23 +602,26 @@ window.generate = function() {
 
 function doRefine() {
   var ta = document.getElementById('rta');
-  var req = ta.value.trim();
-  if (!req) return;
-  addChat('user', req);
-  ta.value = '';
+  var req = ta.value.trim(); if (!req) return;
+  addChat('user', req); ta.value = '';
   document.getElementById('rsend').disabled = true;
   document.getElementById('rsend').textContent = '...';
-  var prompt = BRAND + ' ' + CARD_RULES
-    + ' \uAE30\uC874 \uCF58\uD150\uCE20: ' + lastText
-    + ' \uC218\uC815 \uC694\uCCAD: ' + req
-    + ' \uC704 \uB0B4\uC6A9\uC744 \uC218\uC815 \uC694\uCCAD\uC5D0 \uB9DE\uAC8C \uAC19\uC740 \uD615\uC2DD\uC73C\uB85C \uC804\uCCB4\uB97C \uB2E4\uC2DC \uC791\uC131\uD558\uC138\uC694. \uB9C8\uD06C\uB2E4\uC6B4 \uAE30\uD638(##, **, *, -) \uC808\uB300 \uC0AC\uC6A9 \uAE08\uC9C0.';
+
+  var prompt = mode === 'card'
+    ? buildRefinePrompt(req, lastText)
+    : BRAND + ' \uAE30\uC874:\n' + lastText + '\n\uC218\uC815\uC694\uCCAD: ' + req + ' \uAC19\uC740 \uD615\uC2DD\uC73C\uB85C \uC804\uCCB4\uB97C \uB2E4\uC2DC \uC791\uC131\uD558\uC138\uC694.';
+
   callAI(prompt).then(function(text) {
     lastText = text;
     if (mode === 'card') {
-      lastSlides = parseSlides(text);
-      document.getElementById('cardGrid').innerHTML = '<div class="prog">\uC218\uC815\uB41C \uCE74\uB4DC\uB97C \uADF8\uB9AC\uB294 \uC911...</div>';
-      loadAndRender(lastSlides);
-      addChat('ai', '\uC218\uC815 \uC644\uB8CC! PNG\uAC00 \uC5C5\uB370\uC774\uD2B8\uB418\uC5C8\uC2B5\uB2C8\uB2E4.');
+      try {
+        lastSlides = parseJSON(text);
+        document.getElementById('cardGrid').innerHTML = '<div class="prog">\uC218\uC815\uB41C \uCE74\uB4DC\uB97C \uADF8\uB9AC\uB294 \uC911...</div>';
+        loadAndRender(lastSlides);
+        addChat('ai', '\uC218\uC815 \uC644\uB8CC! PNG\uAC00 \uC5C5\uB370\uC774\uD2B8\uB418\uC5C8\uC2B5\uB2C8\uB2E4.');
+      } catch(e) {
+        addChat('ai', '\uD30C\uC2F1 \uC624\uB958: ' + e.message);
+      }
     } else {
       document.getElementById('plainBody').textContent = text;
       addChat('ai', '\uC218\uC815 \uC644\uB8CC!');
@@ -607,7 +635,7 @@ function doRefine() {
   });
 }
 
-window.handleKey = function(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); doRefine(); } };
+window.handleKey = function(e) { if (e.key==='Enter'&&!e.shiftKey) { e.preventDefault(); doRefine(); } };
 window.refine = doRefine;
 window.copyPlain = function() {
   navigator.clipboard.writeText(lastText).then(function() {
@@ -619,11 +647,11 @@ window.copyPlain = function() {
 
 function addChat(role, msg) {
   var log = document.getElementById('clog');
-  var isU = role === 'user';
-  var d = document.createElement('div'); d.className = 'cmsg' + (isU ? ' u' : '');
-  var av = document.createElement('div'); av.className = 'cav ' + (isU ? 'me' : 'ai');
-  av.textContent = isU ? '\uB098' : 'AI';
-  var bb = document.createElement('div'); bb.className = 'cbbl ' + (isU ? 'me' : 'ai');
+  var isU = role==='user';
+  var d = document.createElement('div'); d.className = 'cmsg'+(isU?' u':'');
+  var av = document.createElement('div'); av.className = 'cav '+(isU?'me':'ai');
+  av.textContent = isU?'\uB098':'AI';
+  var bb = document.createElement('div'); bb.className = 'cbbl '+(isU?'me':'ai');
   bb.textContent = msg;
   d.appendChild(av); d.appendChild(bb);
   log.appendChild(d); log.scrollTop = log.scrollHeight;
@@ -631,9 +659,10 @@ function addChat(role, msg) {
 
 function setLd(on) {
   document.getElementById('gbtn').disabled = on;
-  document.getElementById('spin').style.display = on ? 'block' : 'none';
-  document.getElementById('gtxt').textContent = on ? '\uC0DD\uC131 \uC911...'
-    : (mode === 'card' ? '\u2726 \uCE74\uB4DC\uB274\uC2A4 \uC0DD\uC131 & PNG \uB2E4\uC6B4\uB85C\uB4DC' : '\u2726 \uCF58\uD150\uCE20 \uC0DD\uC131\uD558\uAE30');
+  document.getElementById('spin').style.display = on?'block':'none';
+  document.getElementById('gtxt').textContent = on
+    ? '\uC0DD\uC131 \uC911...'
+    : (mode==='card' ? '\u2726 \uCE74\uB4DC\uB274\uC2A4 \uC0DD\uC131 & PNG \uB2E4\uC6B4\uB85C\uB4DC' : '\u2726 \uCF58\uD150\uCE20 \uC0DD\uC131\uD558\uAE30');
 }
 
 function toast(msg) {
