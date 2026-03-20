@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Cartel Content Studio</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Noto+Serif+KR:wght@400;700;900&family=Black+Han+Sans&family=Nanum+Gothic:wght@400;700;800&family=Nanum+Myeongjo:wght@400;700;800&family=Do+Hyeon&family=Jua&display=swap" rel="stylesheet">
 <style>
 :root{--navy:#183264;--navy2:#0e1c3e;--light:#eef2f8;--border:#dce3f0;--gray:#64748b;--lgray:#f8fafc;--green:#10b981;--red:#ef4444;--r:14px;}
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -302,6 +302,17 @@ textarea{resize:vertical;min-height:72px;line-height:1.65;}
           <div class="cfg-row"><div class="cfg-label">계정명 표시</div><label class="tw"><input type="checkbox" id="cfgAccount" checked><div class="ts"></div></label></div>
           <div class="cfg-row"><div class="cfg-label">배경 스킴</div></div>
           <select id="cfgScheme"><option value="auto">자동 (홀=다크, 짝=라이트)</option><option value="dark">다크 고정</option><option value="light">라이트 고정</option></select>
+          <div style="height:8px;"></div>
+          <div class="cfg-row"><div class="cfg-label">글씨체</div></div>
+          <select id="cfgFont">
+            <option value="Noto Sans KR">Noto Sans KR (기본)</option>
+            <option value="Noto Serif KR">Noto Serif KR (명조계열)</option>
+            <option value="Black Han Sans">Black Han Sans (블랙)</option>
+            <option value="Nanum Gothic">나눔고딕</option>
+            <option value="Nanum Myeongjo">나눔명조</option>
+            <option value="Do Hyeon">도현체</option>
+            <option value="Jua">주아체</option>
+          </select>
         </div>
       </div>
 
@@ -331,7 +342,7 @@ textarea{resize:vertical;min-height:72px;line-height:1.65;}
           <div class="cfg-row"><div class="cfg-label">본문<small id="cfgBdSizeVal"> 30px</small></div><div class="cfg-right"><input type="range" id="cfgBdSize" min="16" max="48" value="30"></div></div>
           <div class="cfg-group-title" style="margin-top:10px;">&#11020; 콘텐츠 위치 (X/Y)</div>
           <div class="cfg-row"><div class="cfg-label">X축 (좌우)<small id="cfgXPctVal"> 7%</small></div><div class="cfg-right"><input type="range" id="cfgXPct" min="2" max="25" value="7"></div></div>
-          <div class="cfg-row"><div class="cfg-label">전체 Y<small id="cfgCtopPctVal"> 18%</small></div><div class="cfg-right"><input type="range" id="cfgCtopPct" min="5" max="55" value="18"></div></div>
+          <div class="cfg-row"><div class="cfg-label">전체 Y<small id="cfgCtopPctVal"> 18%</small></div><div class="cfg-right"><input type="range" id="cfgCtopPct" min="-50" max="55" value="18"></div></div>
           <div class="cfg-group-title" style="margin-top:10px;">&#8597; 헤드라인 / 본문 위치 개별</div>
           <div class="cfg-row"><div class="cfg-label">헤드라인 Y<small id="cfgHlYOffVal"> 0%</small></div><div class="cfg-right"><input type="range" id="cfgHlYOff" min="-40" max="40" value="0"></div></div>
           <div class="cfg-row"><div class="cfg-label">본문 Y<small id="cfgBdYOffVal"> 0%</small></div><div class="cfg-right"><input type="range" id="cfgBdYOff" min="-40" max="40" value="0"></div></div>
@@ -386,6 +397,7 @@ function defaultCfg() {
     hlYOffset: 0,   // 헤드라인 Y 오프셋 (%)
     bdYOffset: 0,   // 본문 Y 오프셋 (%)
     ctopPct: 18,
+    font: 'Noto Sans KR',
     imgData: null, imgX: 50, imgY: 50,
     imgSizePct: 30, imgOpacity: 100, imgRound: 0
   };
@@ -479,10 +491,18 @@ function callAI(prompt) {
 }
 
 function clean(s) {
-  return (s||'').replace(/#{1,6}\s*/g,'').replace(/\*{1,3}([^*\n]+)\*{1,3}/g,'$1')
-                .replace(/_{1,2}([^_\n]+)_{1,2}/g,'$1').replace(/`[^`]+`/g,'')
-                .replace(/^\s*[-*+>]\s*/gm,'').replace(/^\s*\d+\.\s*/gm,'')
-                .replace(/\[([^\]]+)\]\([^)]+\)/g,'$1').trim();
+  if (!s) return '';
+  return s
+    .replace(/#{1,6}\s*/g,'')
+    .replace(/\*{1,3}([^*\n]+)\*{1,3}/g,'$1')
+    .replace(/_{1,2}([^_\n]+)_{1,2}/g,'$1')
+    .replace(/`[^`]+`/g,'')
+    .replace(/^\s*[-*+>]\s*/gm,'')
+    .replace(/^\s*\d+\.\s*/gm,'')
+    .replace(/^[-–—]\s*/,'')
+    .replace(/\[([^\]]+)\]\([^)]+\)/g,'$1')
+    .replace(/^[\s\-–—]+/,'')
+    .trim();
 }
 
 function parseJSON(text) {
@@ -611,9 +631,10 @@ function drawCard(canvas, sl, idx, total, logo){
     ctx.save(); ctx.globalAlpha=0.85; ctx.drawImage(oc,curX,HDR_Y+(HDR_H-40)/2,40,40); ctx.restore();
     curX+=52;
   }
-  ctx.fillStyle=hdrFg; ctx.font='500 19px Noto Sans KR,sans-serif'; ctx.textBaseline='middle'; ctx.textAlign='left';
+  var FONT=cfg.font||'Noto Sans KR';
+  ctx.fillStyle=hdrFg; ctx.font='500 19px '+FONT+',sans-serif'; ctx.textBaseline='middle'; ctx.textAlign='left';
   ctx.fillText('\uCE74\uB974\uD154 \uAD6D\uC5B4\uD559\uC6D0 \uB2E4\uC0B0\uAD00',curX,HDR_Y+HDR_H/2);
-  ctx.fillStyle=hdrFg; ctx.font='400 18px Noto Sans KR,sans-serif'; ctx.textAlign='right';
+  ctx.fillStyle=hdrFg; ctx.font='400 18px '+FONT+',sans-serif'; ctx.textAlign='right';
   ctx.fillText((idx+1)+' / '+total,SZ-PAD,HDR_Y+HDR_H/2); ctx.textAlign='left';
   ctx.fillStyle=lineFg; ctx.fillRect(PAD,HDR_Y+HDR_H+8,SZ-PAD*2,1);
 
@@ -630,39 +651,39 @@ function drawCard(canvas, sl, idx, total, logo){
   if(sl.type==='cover'){
     var mid=CTOP+(CBOT-CTOP)/2+hlExtra;
     ctx.fillStyle=accent; ctx.fillRect(PAD,mid-70,44,4);
-    ctx.fillStyle=fg; ctx.font='900 '+HL+'px Noto Sans KR,sans-serif';
+    ctx.fillStyle=fg; ctx.font='900 '+HL+'px '+FONT+',sans-serif';
     wrapText(ctx,sl.headline,PAD,mid-48,maxW,HLLH);
   } else if(sl.type==='cta'){
     var BH=240,BY=CBOT-BH;
     var hlY=CTOP+10+hlExtra;
     ctx.fillStyle=accent; ctx.fillRect(PAD,hlY,44,4);
-    ctx.fillStyle=fg; ctx.font='900 '+HL+'px Noto Sans KR,sans-serif';
+    ctx.fillStyle=fg; ctx.font='900 '+HL+'px '+FONT+',sans-serif';
     wrapText(ctx,sl.headline,PAD,hlY+18,maxW,HLLH,BY-20);
     ctx.fillStyle=boxBg; rRect(ctx,PAD,BY,SZ-PAD*2,BH,16); ctx.fill();
     ctx.strokeStyle=boxBd; ctx.lineWidth=1; rRect(ctx,PAD,BY,SZ-PAD*2,BH,16); ctx.stroke();
     ctx.fillStyle=dark?'rgba(255,255,255,0.72)':'rgba(24,50,100,0.72)';
-    ctx.font='400 '+BD+'px Noto Sans KR,sans-serif';
+    ctx.font='400 '+BD+'px '+FONT+',sans-serif';
     wrapText(ctx,sl.body,PAD+26,BY+28+bdExtra,maxW-52,BDLH);
   } else {
     var cy=CTOP+16+hlExtra;
     if(sl.tag){
-      ctx.font='700 '+cfg.tagSize+'px Noto Sans KR,sans-serif';
+      ctx.font='700 '+cfg.tagSize+'px '+FONT+',sans-serif';
       var tw=ctx.measureText(sl.tag).width;
       ctx.fillStyle=tagBg; rRect(ctx,PAD,cy,tw+32,40,8); ctx.fill();
       ctx.fillStyle='#FFFFFF'; ctx.textBaseline='middle'; ctx.fillText(sl.tag,PAD+16,cy+20); ctx.textBaseline='top';
       cy+=58;
     }
     ctx.fillStyle=accent; ctx.fillRect(PAD,cy,44,3); cy+=18;
-    ctx.fillStyle=fg; ctx.font='900 '+HL+'px Noto Sans KR,sans-serif';
+    ctx.fillStyle=fg; ctx.font='900 '+HL+'px '+FONT+',sans-serif';
     var afterHL=wrapText(ctx,sl.headline,PAD,cy,maxW,HLLH);
     if(sl.body&&afterHL<CBOT-40){
       var bdY=afterHL+20+bdExtra;
-      ctx.fillStyle=muted; ctx.font='400 '+BD+'px Noto Sans KR,sans-serif';
+      ctx.fillStyle=muted; ctx.font='400 '+BD+'px '+FONT+',sans-serif';
       wrapText(ctx,sl.body,PAD,bdY,maxW,BDLH,CBOT-20);
     }
   }
   if(cfg.showAccount){
-    ctx.fillStyle=hdrFg; ctx.font='400 19px Noto Sans KR,sans-serif'; ctx.textBaseline='bottom';
+    ctx.fillStyle=hdrFg; ctx.font='400 19px '+FONT+',sans-serif'; ctx.textBaseline='bottom';
     ctx.fillText('@dasan_cartel_academy',PAD,SZ-34);
   }
 }
@@ -733,6 +754,7 @@ function syncPanelToSlide(idx){
 
   // 디자인 설정
   sv('cfgLogo',    cfg.showLogo,    'check');
+  sv('cfgFont',    cfg.font||'Noto Sans KR');
   sv('cfgAccount', cfg.showAccount, 'check');
   sv('cfgScheme',  cfg.scheme);
   sv('cfgDarkBg',  cfg.darkBg);  sv('cfgDarkFg',  cfg.darkFg);
@@ -800,6 +822,7 @@ function bindCfgEvents(){
     }
     el.addEventListener('input',upd); el.addEventListener('change',upd);
   }
+  on('cfgFont',    'font',        false);
   on('cfgLogo',    'showLogo',    false);
   on('cfgAccount', 'showAccount', false);
   on('cfgScheme',  'scheme',      false);
