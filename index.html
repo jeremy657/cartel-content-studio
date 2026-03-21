@@ -275,6 +275,15 @@ textarea{resize:vertical;min-height:72px;line-height:1.65;}
         </div>
         <div class="edit-body" style="display:none;">
           <div class="edit-field">
+            <label>상단 학원명 텍스트</label>
+            <input type="text" id="cfgHeaderText" placeholder="카르텔 국어학원 다산관">
+          </div>
+          <div class="edit-field">
+            <label>하단 계정명</label>
+            <input type="text" id="cfgAccountText" placeholder="@dasan_cartel_academy">
+          </div>
+          <div style="border-top:1px solid var(--border);margin:10px 0 10px;"></div>
+          <div class="edit-field">
             <label>슬라이드 타입</label>
             <select id="editType"><option value="cover">커버 (표지)</option><option value="normal" selected>일반</option><option value="cta">CTA (마무리)</option></select>
           </div>
@@ -313,6 +322,23 @@ textarea{resize:vertical;min-height:72px;line-height:1.65;}
             <option value="Do Hyeon">도현체</option>
             <option value="Jua">주아체</option>
           </select>
+          <div style="height:10px;"></div>
+          <div class="cfg-sub-lbl" style="margin-bottom:6px;">로고 교체</div>
+          <div class="img-up-area" id="customLogoUploadBtn" style="padding:9px;">
+            <div class="img-up-icon" style="font-size:16px;">&#128247;</div>
+            <div class="img-up-txt">로고 이미지 업로드</div>
+            <div class="img-up-sub">PNG 권장 (배경 투명)</div>
+          </div>
+          <input type="file" id="customLogoFile" accept="image/*" style="display:none">
+          <div id="customLogoPreview" style="display:none;margin-top:8px;position:relative;">
+            <img id="customLogoImg" src="" alt="" style="width:100%;max-height:60px;object-fit:contain;border:1px solid var(--border);border-radius:6px;">
+            <button id="customLogoRemoveBtn" style="position:absolute;top:3px;right:3px;width:19px;height:19px;background:rgba(0,0,0,.65);border:none;border-radius:50%;color:#fff;font-size:10px;cursor:pointer;">&#10005;</button>
+          </div>
+          <div id="logoCtrlWrap" style="display:none;margin-top:8px;">
+            <div class="cfg-row"><div class="cfg-label">로고 X<small id="cfgLogoXVal"> 7%</small></div><div class="cfg-right"><input type="range" id="cfgLogoX" min="0" max="50" value="7"></div></div>
+            <div class="cfg-row"><div class="cfg-label">로고 Y<small id="cfgLogoYVal"> 5%</small></div><div class="cfg-right"><input type="range" id="cfgLogoY" min="0" max="30" value="5"></div></div>
+            <div class="cfg-row"><div class="cfg-label">로고 크기<small id="cfgLogoSizeVal"> 4%</small></div><div class="cfg-right"><input type="range" id="cfgLogoSize" min="2" max="20" value="4"></div></div>
+          </div>
         </div>
       </div>
 
@@ -385,6 +411,7 @@ var selIdx = -1;
 var slides = [];
 var logoImg = null;
 var uploadedImgs = {};
+var customLogos = {}; // 슬라이드별 사용자 업로드 로고
 
 function defaultCfg() {
   return {
@@ -398,6 +425,12 @@ function defaultCfg() {
     bdYOffset: 0,   // 본문 Y 오프셋 (%)
     ctopPct: 18,
     font: 'Noto Sans KR',
+    headerText: '',        // 빈 문자열이면 기본값 사용
+    accountText: '',       // 빈 문자열이면 기본값 사용
+    customLogoData: null,  // 사용자 업로드 로고
+    logoX: 7,              // 로고 X 위치 (% of SZ)
+    logoY: 5,              // 로고 Y 위치 (% of SZ)
+    logoSize: 4,           // 로고 크기 (% of SZ)
     imgData: null, imgX: 50, imgY: 50,
     imgSizePct: 30, imgOpacity: 100, imgRound: 0
   };
@@ -492,17 +525,21 @@ function callAI(prompt) {
 
 function clean(s) {
   if (!s) return '';
-  return s
-    .replace(/#{1,6}\s*/g,'')
-    .replace(/\*{1,3}([^*\n]+)\*{1,3}/g,'$1')
-    .replace(/_{1,2}([^_\n]+)_{1,2}/g,'$1')
-    .replace(/`[^`]+`/g,'')
-    .replace(/^\s*[-*+>]\s*/gm,'')
-    .replace(/^\s*\d+\.\s*/gm,'')
-    .replace(/^[-–—]\s*/,'')
-    .replace(/\[([^\]]+)\]\([^)]+\)/g,'$1')
-    .replace(/^[\s\-–—]+/,'')
-    .trim();
+  // 줄별로 마크다운 제거 후 재조합
+  var lines = s.split('\n');
+  lines = lines.map(function(l) {
+    return l
+      .replace(/^\s*#{1,6}\s*/, '')
+      .replace(/^\s*[-*+>]\s+/, '')
+      .replace(/^\s*\d+\.\s+/, '')
+      .replace(/^[-\u2013\u2014]\s*/, '')
+      .replace(/\*{1,3}([^*]+)\*{1,3}/g, '$1')
+      .replace(/_{1,2}([^_]+)_{1,2}/g, '$1')
+      .replace(/`[^`]+`/g, '')
+      .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+      .trim();
+  });
+  return lines.filter(function(l){ return l.length > 0; }).join('\n').trim();
 }
 
 function parseJSON(text) {
@@ -624,16 +661,37 @@ function drawCard(canvas, sl, idx, total, logo){
 
   var PAD=SZ*cfg.contentXPct/100;
   var HDR_Y=50,HDR_H=50,curX=PAD;
-  if(cfg.showLogo&&logo&&logo.complete&&logo.naturalWidth>0){
-    var oc=document.createElement('canvas'); oc.width=logo.naturalWidth; oc.height=logo.naturalHeight;
-    var ox=oc.getContext('2d'); ox.drawImage(logo,0,0);
-    ox.globalCompositeOperation='source-in'; ox.fillStyle=fg; ox.fillRect(0,0,oc.width,oc.height);
-    ctx.save(); ctx.globalAlpha=0.85; ctx.drawImage(oc,curX,HDR_Y+(HDR_H-40)/2,40,40); ctx.restore();
-    curX+=52;
+  if(cfg.showLogo){
+    var activeLogo = null;
+    // 사용자 업로드 로고 우선, 없으면 기본 로고
+    if(cfg.customLogoData && customLogos[idx] && customLogos[idx].complete){
+      activeLogo = customLogos[idx];
+    } else if(logo && logo.complete && logo.naturalWidth>0){
+      activeLogo = logo;
+    }
+    if(activeLogo){
+      var logoSZ = SZ * (cfg.logoSize||4) / 100;
+      var logoX2 = SZ * (cfg.logoX||7) / 100;
+      var logoY2 = SZ * (cfg.logoY||5) / 100;
+      if(cfg.customLogoData){
+        // 사용자 로고: 색상 적용 안함, 그대로 표시
+        ctx.save(); ctx.globalAlpha=0.9;
+        ctx.drawImage(activeLogo, logoX2, logoY2, logoSZ, logoSZ);
+        ctx.restore();
+        curX = logoX2 + logoSZ + 12;
+      } else {
+        // 기본 로고: 색상 오버레이
+        var oc=document.createElement('canvas'); oc.width=activeLogo.naturalWidth; oc.height=activeLogo.naturalHeight;
+        var ox=oc.getContext('2d'); ox.drawImage(activeLogo,0,0);
+        ox.globalCompositeOperation='source-in'; ox.fillStyle=fg; ox.fillRect(0,0,oc.width,oc.height);
+        ctx.save(); ctx.globalAlpha=0.85; ctx.drawImage(oc,curX,HDR_Y+(HDR_H-logoSZ)/2,logoSZ,logoSZ); ctx.restore();
+        curX+=logoSZ+12;
+      }
+    }
   }
   var FONT=cfg.font||'Noto Sans KR';
   ctx.fillStyle=hdrFg; ctx.font='500 19px '+FONT+',sans-serif'; ctx.textBaseline='middle'; ctx.textAlign='left';
-  ctx.fillText('\uCE74\uB974\uD154 \uAD6D\uC5B4\uD559\uC6D0 \uB2E4\uC0B0\uAD00',curX,HDR_Y+HDR_H/2);
+  ctx.fillText(cfg.headerText||'\uCE74\uB974\uD154 \uAD6D\uC5B4\uD559\uC6D0 \uB2E4\uC0B0\uAD00',curX,HDR_Y+HDR_H/2);
   ctx.fillStyle=hdrFg; ctx.font='400 18px '+FONT+',sans-serif'; ctx.textAlign='right';
   ctx.fillText((idx+1)+' / '+total,SZ-PAD,HDR_Y+HDR_H/2); ctx.textAlign='left';
   ctx.fillStyle=lineFg; ctx.fillRect(PAD,HDR_Y+HDR_H+8,SZ-PAD*2,1);
@@ -684,7 +742,7 @@ function drawCard(canvas, sl, idx, total, logo){
   }
   if(cfg.showAccount){
     ctx.fillStyle=hdrFg; ctx.font='400 19px '+FONT+',sans-serif'; ctx.textBaseline='bottom';
-    ctx.fillText('@dasan_cartel_academy',PAD,SZ-34);
+    ctx.fillText(cfg.accountText||'@dasan_cartel_academy',PAD,SZ-34);
   }
 }
 
@@ -765,6 +823,21 @@ function syncPanelToSlide(idx){
   svr('cfgCtopPct', cfg.ctopPct,      'cfgCtopPctVal', '%');
   svr('cfgHlYOff',  cfg.hlYOffset,    'cfgHlYOffVal',  '%');
   svr('cfgBdYOff',  cfg.bdYOffset,    'cfgBdYOffVal',  '%');
+  // 헤더/계정명/로고 동기화
+  setInputVal('cfgHeaderText', cfg.headerText||'');
+  setInputVal('cfgAccountText', cfg.accountText||'');
+  svr('cfgLogoX',    cfg.logoX||7,    'cfgLogoXVal',   '%');
+  svr('cfgLogoY',    cfg.logoY||5,    'cfgLogoYVal',   '%');
+  svr('cfgLogoSize', cfg.logoSize||4, 'cfgLogoSizeVal','%');
+  // 사용자 로고 미리보기
+  if(cfg.customLogoData){
+    document.getElementById('customLogoPreview').style.display='block';
+    document.getElementById('customLogoImg').src=cfg.customLogoData;
+    document.getElementById('logoCtrlWrap').style.display='block';
+  } else {
+    document.getElementById('customLogoPreview').style.display='none';
+    document.getElementById('logoCtrlWrap').style.display='none';
+  }
   svr('cfgImgX',    cfg.imgX,         'cfgImgXVal',    '%');
   svr('cfgImgY',    cfg.imgY,         'cfgImgYVal',    '%');
   svr('cfgImgSize', cfg.imgSizePct,   'cfgImgSizeVal', '%');
@@ -783,6 +856,7 @@ function syncPanelToSlide(idx){
 }
 
 function sv(id,val,type){ var el=document.getElementById(id); if(!el) return; if(type==='check') el.checked=val; else el.value=val; }
+function setInputVal(id,val){ var el=document.getElementById(id); if(el) el.value=val; }
 function svr(id,val,lblId,unit){ var el=document.getElementById(id); if(!el) return; el.value=val; var lbl=document.getElementById(lblId); if(lbl) lbl.textContent=' '+val+(unit||''); }
 
 function toggleTagRow(type){
@@ -811,6 +885,14 @@ function bindContentEdit(){
 
 /* ═══ 디자인 설정 이벤트 ═══ */
 function bindCfgEvents(){
+  function onText(id, key){
+    var el=document.getElementById(id); if(!el) return;
+    el.addEventListener('input', function(){
+      if(selIdx<0||selIdx>=slides.length) return;
+      slides[selIdx].cfg[key]=this.value;
+      reRenderSlide(selIdx);
+    });
+  }
   function on(id,key,isNum,lblId,unit){
     var el=document.getElementById(id); if(!el) return;
     function upd(){
@@ -836,6 +918,38 @@ function bindCfgEvents(){
   on('cfgCtopPct', 'ctopPct',     true, 'cfgCtopPctVal','%');
   on('cfgHlYOff',  'hlYOffset',   true, 'cfgHlYOffVal', '%');
   on('cfgBdYOff',  'bdYOffset',   true, 'cfgBdYOffVal', '%');
+  // 헤더 텍스트
+  onText('cfgHeaderText',  'headerText');
+  onText('cfgAccountText', 'accountText');
+  // 로고 위치/크기
+  on('cfgLogoX',    'logoX',    true, 'cfgLogoXVal',    '%');
+  on('cfgLogoY',    'logoY',    true, 'cfgLogoYVal',    '%');
+  on('cfgLogoSize', 'logoSize', true, 'cfgLogoSizeVal', '%');
+  // 사용자 로고 업로드
+  document.getElementById('customLogoUploadBtn').onclick = function(){ document.getElementById('customLogoFile').click(); };
+  document.getElementById('customLogoFile').onchange = function(e){
+    if(selIdx<0) return;
+    var f=e.target.files[0]; if(!f) return;
+    var reader=new FileReader();
+    reader.onload=function(ev){
+      slides[selIdx].cfg.customLogoData=ev.target.result;
+      var img=new Image();
+      img.onload=function(){ customLogos[selIdx]=img; reRenderSlide(selIdx); };
+      img.src=ev.target.result;
+      document.getElementById('customLogoPreview').style.display='block';
+      document.getElementById('customLogoImg').src=ev.target.result;
+      document.getElementById('logoCtrlWrap').style.display='block';
+    };
+    reader.readAsDataURL(f);
+  };
+  document.getElementById('customLogoRemoveBtn').onclick = function(){
+    if(selIdx<0) return;
+    slides[selIdx].cfg.customLogoData=null; delete customLogos[selIdx];
+    document.getElementById('customLogoPreview').style.display='none';
+    document.getElementById('logoCtrlWrap').style.display='none';
+    document.getElementById('customLogoFile').value='';
+    reRenderSlide(selIdx);
+  };
   on('cfgImgX',    'imgX',        true, 'cfgImgXVal',   '%');
   on('cfgImgY',    'imgY',        true, 'cfgImgYVal',   '%');
   on('cfgImgSize', 'imgSizePct',  true, 'cfgImgSizeVal','%');
