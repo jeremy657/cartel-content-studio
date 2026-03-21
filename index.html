@@ -275,8 +275,17 @@ textarea{resize:vertical;min-height:72px;line-height:1.65;}
         </div>
         <div class="edit-body" style="display:none;">
           <div class="edit-field">
-            <label>상단 학원명 텍스트</label>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+              <label style="margin-bottom:0;">상단 학원명</label>
+              <label class="tw" title="표시/숨김"><input type="checkbox" id="cfgHeaderTextToggle" checked><div class="ts"></div></label>
+            </div>
             <input type="text" id="cfgHeaderText" placeholder="카르텔 국어학원 다산관">
+          </div>
+          <div class="edit-field">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+              <label style="margin-bottom:0;">상단 구분선</label>
+              <label class="tw" title="표시/숨김"><input type="checkbox" id="cfgDividerToggle" checked><div class="ts"></div></label>
+            </div>
           </div>
           <div class="edit-field">
             <label>하단 계정명</label>
@@ -416,6 +425,7 @@ var customLogos = {}; // 슬라이드별 사용자 업로드 로고
 function defaultCfg() {
   return {
     showLogo: true, showAccount: true,
+    showHeaderText: true, showDivider: true,
     scheme: 'auto',
     darkBg: '#183264', darkFg: '#FFFFFF',
     lightBg: '#FFFFFF', lightFg: '#183264',
@@ -669,6 +679,10 @@ function drawCard(canvas, sl, idx, total, logo){
     ctx.drawImage(uImg,iX,iY2,iW,iH); ctx.restore();
   }
 
+  // 카드 그릴 때 마크다운 한번 더 제거 (어디서 왔든 상관없이)
+  var HL_TEXT = clean(sl.headline||'');
+  var BD_TEXT = clean(sl.body||'');
+  var TAG_TEXT = clean(sl.tag||'');
   var PAD=SZ*cfg.contentXPct/100;
   var HDR_Y=50,HDR_H=50,curX=PAD;
   if(cfg.showLogo){
@@ -701,10 +715,10 @@ function drawCard(canvas, sl, idx, total, logo){
   }
   var FONT=cfg.font||'Noto Sans KR';
   ctx.fillStyle=hdrFg; ctx.font='500 19px '+FONT+',sans-serif'; ctx.textBaseline='middle'; ctx.textAlign='left';
-  ctx.fillText(cfg.headerText||'\uCE74\uB974\uD154 \uAD6D\uC5B4\uD559\uC6D0 \uB2E4\uC0B0\uAD00',curX,HDR_Y+HDR_H/2);
+  if(cfg.showHeaderText!==false){ ctx.fillText(cfg.headerText||'\uCE74\uB974\uD154 \uAD6D\uC5B4\uD559\uC6D0 \uB2E4\uC0B0\uAD00',curX,HDR_Y+HDR_H/2); }
   ctx.fillStyle=hdrFg; ctx.font='400 18px '+FONT+',sans-serif'; ctx.textAlign='right';
   ctx.fillText((idx+1)+' / '+total,SZ-PAD,HDR_Y+HDR_H/2); ctx.textAlign='left';
-  ctx.fillStyle=lineFg; ctx.fillRect(PAD,HDR_Y+HDR_H+8,SZ-PAD*2,1);
+  if(cfg.showDivider!==false){ ctx.fillStyle=lineFg; ctx.fillRect(PAD,HDR_Y+HDR_H+8,SZ-PAD*2,1); }
 
   var CTOP=SZ*cfg.ctopPct/100;
   var CBOT=SZ-(cfg.showAccount?80:36);
@@ -720,34 +734,34 @@ function drawCard(canvas, sl, idx, total, logo){
     var mid=CTOP+(CBOT-CTOP)/2+hlExtra;
     ctx.fillStyle=accent; ctx.fillRect(PAD,mid-70,44,4);
     ctx.fillStyle=fg; ctx.font='900 '+HL+'px '+FONT+',sans-serif';
-    wrapText(ctx,sl.headline,PAD,mid-48,maxW,HLLH);
+    wrapText(ctx,HL_TEXT,PAD,mid-48,maxW,HLLH);
   } else if(sl.type==='cta'){
     var BH=240,BY=CBOT-BH;
     var hlY=CTOP+10+hlExtra;
     ctx.fillStyle=accent; ctx.fillRect(PAD,hlY,44,4);
     ctx.fillStyle=fg; ctx.font='900 '+HL+'px '+FONT+',sans-serif';
-    wrapText(ctx,sl.headline,PAD,hlY+18,maxW,HLLH,BY-20);
+    wrapText(ctx,HL_TEXT,PAD,hlY+18,maxW,HLLH,BY-20);
     ctx.fillStyle=boxBg; rRect(ctx,PAD,BY,SZ-PAD*2,BH,16); ctx.fill();
     ctx.strokeStyle=boxBd; ctx.lineWidth=1; rRect(ctx,PAD,BY,SZ-PAD*2,BH,16); ctx.stroke();
     ctx.fillStyle=dark?'rgba(255,255,255,0.72)':'rgba(24,50,100,0.72)';
     ctx.font='400 '+BD+'px '+FONT+',sans-serif';
-    wrapText(ctx,sl.body,PAD+26,BY+28+bdExtra,maxW-52,BDLH);
+    wrapText(ctx,BD_TEXT,PAD+26,BY+28+bdExtra,maxW-52,BDLH);
   } else {
     var cy=CTOP+16+hlExtra;
-    if(sl.tag){
+    if(TAG_TEXT){
       ctx.font='700 '+cfg.tagSize+'px '+FONT+',sans-serif';
-      var tw=ctx.measureText(sl.tag).width;
+      var tw=ctx.measureText(TAG_TEXT).width;
       ctx.fillStyle=tagBg; rRect(ctx,PAD,cy,tw+32,40,8); ctx.fill();
-      ctx.fillStyle='#FFFFFF'; ctx.textBaseline='middle'; ctx.fillText(sl.tag,PAD+16,cy+20); ctx.textBaseline='top';
+      ctx.fillStyle='#FFFFFF'; ctx.textBaseline='middle'; ctx.fillText(TAG_TEXT,PAD+16,cy+20); ctx.textBaseline='top';
       cy+=58;
     }
     ctx.fillStyle=accent; ctx.fillRect(PAD,cy,44,3); cy+=18;
     ctx.fillStyle=fg; ctx.font='900 '+HL+'px '+FONT+',sans-serif';
-    var afterHL=wrapText(ctx,sl.headline,PAD,cy,maxW,HLLH);
-    if(sl.body&&afterHL<CBOT-40){
+    var afterHL=wrapText(ctx,HL_TEXT,PAD,cy,maxW,HLLH);
+    if(BD_TEXT&&afterHL<CBOT-40){
       var bdY=afterHL+20+bdExtra;
       ctx.fillStyle=muted; ctx.font='400 '+BD+'px '+FONT+',sans-serif';
-      wrapText(ctx,sl.body,PAD,bdY,maxW,BDLH,CBOT-20);
+      wrapText(ctx,BD_TEXT,PAD,bdY,maxW,BDLH,CBOT-20);
     }
   }
   if(cfg.showAccount){
@@ -821,7 +835,9 @@ function syncPanelToSlide(idx){
   document.getElementById('editBody').value=sl.body||'';
 
   // 디자인 설정
-  sv('cfgLogo',    cfg.showLogo,    'check');
+  sv('cfgLogo',       cfg.showLogo,             'check');
+  sv('cfgHeaderTextToggle', cfg.showHeaderText!==false, 'check');
+  sv('cfgDividerToggle',    cfg.showDivider!==false,    'check');
   sv('cfgFont',    cfg.font||'Noto Sans KR');
   sv('cfgAccount', cfg.showAccount, 'check');
   sv('cfgScheme',  cfg.scheme);
@@ -914,8 +930,10 @@ function bindCfgEvents(){
     }
     el.addEventListener('input',upd); el.addEventListener('change',upd);
   }
-  on('cfgFont',    'font',        false);
-  on('cfgLogo',    'showLogo',    false);
+  on('cfgFont',           'font',           false);
+  on('cfgLogo',           'showLogo',       false);
+  on('cfgHeaderTextToggle','showHeaderText', false);
+  on('cfgDividerToggle',   'showDivider',    false);
   on('cfgAccount', 'showAccount', false);
   on('cfgScheme',  'scheme',      false);
   on('cfgDarkBg',  'darkBg',      false);
